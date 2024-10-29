@@ -32,54 +32,88 @@ btn.onclick = function () {
         if (segments[winningIndex] === "en") {
             window.location.href = "https://www.youtube.com/watch?v=CS9OO0S5w2k";
         }
+        //hvis winningindex tallet bliver 1 som har classen en så skal den spille overraskelsen
+        //hvis ikke tallet er 1 så skal den gøre else {
         else {
             const winningAlbumElement = document.querySelector(`[data-id="album-${winningIndex + 1}"]`);
+            //laver en ny deklaration som er forbindelsen imellem en classen som bliver valgt som winningindex og albumsne, der er fordelt i id
             if (winningAlbumElement) {
-                winningAlbumElement.style.color = "#4b48ff"; // Farver det tilsvarende album
-                women.textContent = `Album ${segments[winningIndex]} bliver vist nu`;
+                winningAlbumElement.style.color = "#4b48ff";
+                //Når der er et album der vinder så skal den gøre albums titlens farve om til #4b48ff som er det blå
+                //backup: women.textContent = `Album ${segments[winningIndex]} bliver vist nu`;
+                women.textContent = `Album ${[winningIndex + 1]} bliver vist nu`;
+                //objektet women er forbundet med id,et winnerwinnerchickendinner
+                //Så når der er et winningalbumelemnt over 1 så skal den vise som text
+                //'album winningindex +1 blive vist nu.'
+                //det er plus 1 da winningindex starter fra 0 og albummet selfølgelig starter fra 1
+                //Derfor for at undgå at 1 bliver til 2 osv så pluser jeg den med 1 så 2 bliver til 2
                 hentdata().then(data => {
-                    const winningAlbum = data[winningIndex - 1]; // Adjusted to get the correct album from the array
+                //Nu skal der laves tabellerne i showtime diven.
+                //derfor starter vi med at finde dataen og vente til at dataen er hentet med .then
+                    const winningAlbum = data[winningIndex - 1];
+                    //her bliver der brugt -1 så det passer med at winningindex starter på nul
                     if (winningAlbum) {
+                    //Hvis der er et winning album gør følgende {
+                        const totalPlayTime = (album) => {
+                            //definerer en constant der er totalplaytime
+                            //album er en parameter
+                            //Det betyder at selve værdien album ikke kan ændres men værdien på albummet godt kan.
+                            const totalSeconds = album.trackList.reduce((sum, track) => sum + track.trackTimeInSeconds, 0);
+                            //Tager sum fra alle tracks og pluser dem sammen. og kalder den udregning for totalseconds.
+                            //Det fordi, guess what. det er den totale mængde af sekunder
+                            return `${Math.floor(totalSeconds / 60)} minutter og ${totalSeconds % 60} sekunder`;
+                            //Her bliver sekunder i totalplaytime lavet om til en sætning i form af
+                            //Den første udregning finder antallet af minutter i hele tal
+                            //den anden tager det resterende beløb og laver det om til sekunder igen
+                            //Dvs at sekunderne aldrig kan komme over 60
+                        };
                         const trackListTable = `
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>Track Number</th>
-                                        <th>Track Title</th>
-                                        <th>Track Time (seconds)</th>
-                                    </tr>
-                                </thead>
+                           
                                 <tbody>
-                                    ${winningAlbum.trackList.map(track => `
+                                    <tr>
+                                        <td colspan="3">
+                                            Artisten er ${winningAlbum.artistName}. 
+                                            Albummet blev produceret i ${winningAlbum.productionYear}. 
+                                            Genren er ${winningAlbum.genre}. 
+                                            Last but not least, varer albummet i ${totalPlayTime(winningAlbum)}
+                                        </td>
+                                    </tr>
+                                    <tr> 
+                                        <th>Track Nummer</th>
+                                        <th>Track Titel</th>
+                                        <th>Track Tid</th>
+                                    </tr>
+                                    ${winningAlbum.trackList.map(track =>
+                                       //map bruges da den kommende data skal hentes inde fra et array. som er tracklist.
+                                        `
                                         <tr>
                                             <td>${track.trackNumber}</td>
                                             <td>${track.trackTitle}</td>
-                                            <td>${track.trackTimeInSeconds}</td>
+                                            <td>${track.trackTimeInSeconds}s</td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
                             </table>
                         `;
+                        //laver følgende "setup" til const,en tracklisttable
                         document.getElementById("showtime").innerHTML = trackListTable;
+                        //innerhtml / putter ind i html,en hvor hen? jamen showtime
                     }
                 });
             }
         }        
-        //hvis winningindex tallet bliver 1 som har classen en så skal den spille overraskelsen
-        //hvis ikke tallet er 1 så skal den vise beskeden album+tallet+bliver vist nu i objektet kvinder
         //↑WINNERWINNER SVARSTED IFELSE STATEMENT↑
     }, 5000); // 5000 miliseconds eller 5 sekunder som nogen også ville kalde det.
     //ifElse statementet skal tage 5 sekunder med at svare så der er tid til at animationen kan køre færdig
 
     number += Math.ceil(Math.random() * 2000); // Hver gang funktionen har kørt skal den køre en ny random angle istedet for at bruge den samme.
-}; //funktion slut
-//Datafetch⬇
-//Datafetch⬇
-//Datafetch⬇
-//Datafetch⬇
+}; //funktion slut (spin btn)
 const albums = "../Datafolder/albums.json";
-const albumlisteDiv = document.getElementById("albumliste");
 // Stilvejen bliver defineret som albums.
+const albumlisteDiv = document.getElementById("albumliste");
+// Kalder det element i html, doc med id,et albumliste for albumlistediv.
+//-----------------------------------logdatastart---------------------------------------------\\
 function hentdata() {
     // "hentdata" funktionen bruges til at hente/håndtere dataen
     return fetch(albums)
@@ -88,28 +122,38 @@ function hentdata() {
             // Når filen er hentet skal den reagere som følger:
             if (!response.ok) {
                 // Hvis filen er status 200-299 (ok) så skal den:
-                throw new Error('Alt er bar helt helt ok ${response.status}');
-                // Denne besked kommer op i konsollen. ${response.status} er talelt mellem 200-299
+                throw new Error('Stor fejl ${response.status}.');
+                // Abryder koden og sender fejlen op til næste catch
             }
+            console.log(`If you dig a 6 feet hole, how did is that hole? its properly like ${response.status} feet.`);
             return response.json();
         })
         .catch(error => {
             // Stopper her så alle fejl ikke gå ud og fucker alt muligt andet op.
-            console.error("Den er helt gál", error);
+            console.error('She said she was ${response.status}', error);
             // Logger fejlkoderne i konsollen så man kan debug senere
         });
 }
 
 //------------------------------------logdataslut --------------------------------------------\\
 hentdata().then(data => {
+    //kalder på dataen, og venter på at dataen er hentet med .then
     const albumListeDiv = document.getElementById("albumliste");
-    let albumListHTML = "<p id='title'> Albums</p><p data-id='1'>1. Overraskelse</p>"; // Tilføjer "Overraskelse" på plads 1 med data-id 1
-
+    // samme som på linje 115. men skal skrives igen da det nu er i en ny context 
+    let albumListHTML = "<p id='title'> Albums</p><p data-id='1'>1. Overraskelse</p>";
+    // Tilføjer "Overraskelse" på plads 1 med data-id 1.
+    //Det er fordi at overraskelsen ikke har noget med albumsne at gøre.
     data.forEach((album, index) => {
-        const generatedID = `album-${index + 2}`; // Genererer et unikt ID til hvert album som hedder 'album-indeix+2'
+        //foreach / for hvert album / index
+        const generatedID = `album-${index + 2}`;
+        // Genererer et unikt ID til hvert album som hedder 'album-indeix+2'
+        // et eksempel er id="album-2"
         albumListHTML += `<p data-id="${generatedID}">${index + 2}. ${album.albumName}</p>`;
     });
+    //opretter i liste en paragraf med det generet is som ene liste
+    // Albumnavn derudfra
 
-    albumListeDiv.innerHTML = albumListHTML; // Sætter genereret HTML i albumliste-div'en
+    albumListeDiv.innerHTML = albumListHTML; // Sætter genereret HTML i albumlistediven
 
 });
+//:D
