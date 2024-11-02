@@ -94,7 +94,7 @@ btn.onclick = function () {
                            
                                 <tbody>
                                     <tr>
-                                        <td colspan="3">
+                                        <td id="ondkat" colspan="3">
                                             Artisten er ${
                                               winningAlbum.artistName
                                             }. 
@@ -104,14 +104,16 @@ btn.onclick = function () {
                                             Genren er ${winningAlbum.genre}. 
                                             Last but not least, varer albummet i ${totalPlayTime(
                                               winningAlbum
-                                              //Siger sig selv
+                                              //Siger sig selv. Men jeg skal jo nok uddybe det.
+                                              //winningalbum er forkortelse for det album der har vundet, så den
+                                              //henter den specifikke data fra json filen fra det album der endte med at vinde.
                                             )}
                                         </td>
                                     </tr>
                                     <tr> 
                                         <th>Track Nummer</th>
                                         <th>Track Titel</th>
-                                        <th>Track Tid</th>
+                                        <th>Track Sekunder</th>
                                     </tr>
                                     ${winningAlbum.trackList
                                       .map(
@@ -119,9 +121,9 @@ btn.onclick = function () {
                                           //map bruges da den kommende data skal hentes inde fra et array. som er tracklist.
                                           `
                                         <tr>
-                                            <td>${track.trackNumber}</td>
-                                            <td>${track.trackTitle}</td>
-                                            <td>${track.trackTimeInSeconds}s</td>
+                                            <td class="Missekat">${track.trackNumber}</td>
+                                            <td class="Missekat">${track.trackTitle}</td>
+                                            <td class="Missekat">${track.trackTimeInSeconds}s</td>
                                         </tr>
                                     `
                                       )

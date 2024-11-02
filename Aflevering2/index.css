@@ -26,7 +26,7 @@ body {
 /*border radius 50% vil altid gøre elementet til en cirkel*/
 .container div {
   height: 50%;
-  width: 200px;
+  width: 139px;
   position: absolute;
   clip-path: polygon(100% 0, 50% 100%, 0 0);
   transform: translateX(-50%);
@@ -39,7 +39,7 @@ body {
   font-weight: bold;
   font-family: "Brush Script MT", cursive;
   color: #fff;
-  left: 135px;
+  left: 167px;
 }
 /*Man behøver kun skrive container div for at få fadt i alle divs i container elementet. da alle divs,ne er samme "mængde" childelement ift til containerdiven*/
 .container .en {
@@ -174,4 +174,12 @@ Deg er degress. antal grader hver div er bøjet på.*/
 }
 /*Jeg synes position absolute right/left og top er nemmest at bruge til at svinge ting rundt på siden
 well aware at der er mulighed for at align items center osv*/
+.Missekat {
+  text-align: center;
+}
+#ondkat {
+  border-radius: 7px;
+  border-bottom: solid black;
+  border-top: solid black;
+}
 /*:D*/
